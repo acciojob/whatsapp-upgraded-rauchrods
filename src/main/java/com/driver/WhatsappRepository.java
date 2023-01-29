@@ -177,14 +177,21 @@ public class WhatsappRepository {
         userList.remove(user);
         groupHashMap.put(exisGrp,userList);
 
-        List<Message> grpmessageList = groupMessageHashMap.get(exisGrp);
+
         List<Message> usermessageList = userMessageHashMap.get(user);
-        for(Message message: grpmessageList){
-            if(usermessageList.contains(message)){
-                grpmessageList.remove(message);
+
+        for(Group group: groupMessageHashMap.keySet()){
+
+            List<Message> grpmessageList = groupMessageHashMap.get(group);
+            for(Message message: grpmessageList){
+                if(usermessageList.contains(message)){
+                    grpmessageList.remove(message);
+                }
             }
+            groupMessageHashMap.put(group,grpmessageList);
         }
-        groupMessageHashMap.put(exisGrp,grpmessageList);
+
+
 
         userMessageHashMap.remove(user);
         userHashMap.remove(user.getMobile());

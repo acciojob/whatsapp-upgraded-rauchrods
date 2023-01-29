@@ -2,10 +2,7 @@ package com.driver;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class WhatsappRepository {
@@ -203,5 +200,25 @@ public class WhatsappRepository {
         int overallmsgs=messageList.size();
 
         return usersInGroup + msgsInGroup + overallmsgs;
+    }
+
+    public String findMessage(Date start, Date end, int K) throws Exception{
+      List<Message> elligiblemessagelist = new ArrayList<>();
+      for(Message message: messageList){
+          if(message.getTimestamp().compareTo(start)>0 && message.getTimestamp().compareTo(end)<0){
+              elligiblemessagelist.add(message);
+          }
+      }
+      if(elligiblemessagelist.size()<K){
+          throw new Exception("K is greater than the number of messages");
+      }
+
+      Collections.sort(elligiblemessagelist, new Comparator<Message>() {
+          @Override
+          public int compare(Message o1, Message o2) {
+              return o1.getTimestamp().compareTo(o2.getTimestamp());
+          }
+      });
+      return elligiblemessagelist.get(K-1).getContent();
     }
 }

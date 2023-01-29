@@ -23,7 +23,7 @@ public class WhatsappController {
     WhatsappService whatsappService = new WhatsappService();
 
     @PostMapping("/add-user")
-    public String createUser(String name, String mobile) throws Exception {
+    public String createUser(@RequestParam("name") String name, @RequestParam("mobile") String mobile) throws Exception {
         //If the mobile number exists in database, throw "User already exists" exception
         //Otherwise, create the user and return "SUCCESS"
         String res=null;
@@ -37,7 +37,7 @@ public class WhatsappController {
     }
 
     @PostMapping("/add-group")
-    public Group createGroup(List<User> users){
+    public Group createGroup(@RequestBody List<User> users){
         // The list contains at least 2 users where the first user is the admin. A group has exactly one admin.
         // If there are only 2 users, the group is a personal chat and the group name should be kept as the name of the second user(other than admin)
         // If there are 2+ users, the name of group should be "Group count". For example, the name of first group would be "Group 1", second would be "Group 2" and so on.
@@ -52,7 +52,7 @@ public class WhatsappController {
     }
 
     @PostMapping("/add-message")
-    public int createMessage(String content){
+    public int createMessage( @RequestParam("content") String content){
         // The 'i^th' created message has message id 'i'.
         // Return the message id.
 
@@ -111,7 +111,14 @@ public class WhatsappController {
         // Find the Kth latest message between start and end (excluding start and end)
         // If the number of messages between given time is less than K, throw "K is greater than the number of messages" exception
 
-//        return whatsappService.findMessage(start, end, K);
-        return "yo";
+        String res=null;
+        try {
+             res = whatsappService.findMessage(start, end, K);
+        }
+        catch (Exception e){
+            return e.getMessage();
+        }
+        return res;
+
     }
 }
